@@ -1,0 +1,132 @@
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<head>
+		<meta charset="UTF-8">
+		<title>计算器</title>
+		<style type="text/css">
+			p{
+				#text-align: center;
+                font-size: 25px;
+			} 
+			v{
+				#text-align: center;
+                font-size: 18px;
+			}
+			.box{
+				margin:  0 auto;
+				width: 215px;
+				height: 245px;
+				border: 1px solid red;
+			} 
+			.sty{
+				width: 50px;
+				height: 30px;
+				margin-top: 6px;
+				border-radius: 17px;
+				cursor: pointer;
+			} 
+			.sty:hover{
+				background-color: aquamarine;
+			}
+			#field{
+				line-height: 50px;
+				font-size: 39px;
+				width: 212px;
+				height: 51px;
+				border-bottom: 1px solid #FF0000;
+				margin-bottom: -20px;
+				overflow: hidden;
+			} 
+		</style>
+	</head>
+	<body>
+   		<p>-------"贷款OR全款计算程序"------</p>
+		<p>金额（元）：<label><input type="text" id="TotalMony" /></label></p>
+        <p>年限（年）：<label><input type="text" id="LoanTime" /></label></p>
+        <p>贷款利率（年化，例0.05）：<label><input type="text" id="LoanRateY" /></label></p>
+        <p>通货膨胀率（年化，例0.08）：<label><input type="text" id="Inflation" /></label></p>    
+        <p>理财收益（年化，例0.02）：<label><input type="text" id="FinanceRate" /></label></p>  
+        <input class = "sty" type="button" onclick="reset_value()" value="清空"/>        
+		<input class = "sty" type="button" onclick="equal()" value="计算"/><br />
+         <p>贷款相对全款损失的购买力：<label><type="text" id="Reslt" /></label></p>  
+		 <p>建议：<label><type="text" id="Suggestion" /></label></p>  
+         
+        <v>----------------------------</v><br />
+        <v>Author: WY</v><br />
+        <v>Email: 1515991197@qq.com</v><br />
+        <v>仅供个人使用</v><br />
+        <v>----------------------------</v>
+			
+		<script type="text/javascript">
+		//	function num(figure){     //js方法传递一个形参用来获取button的值
+		//		var figure = figure.toString();  /* 将方法获取到的值变为字符串 */
+		//		console.log(figure);
+		//		var show = document.getElementById("field");    //获取div框
+		//		showNum = show.innerHTML + figure;  //将输入的元素依次进行连接    
+		//		show.innerHTML = showNum ;           //再将输入的元素返回到div框中显示
+		//	}
+			//function equal(){   //定义等于的算法
+				/*  将input框的值进行运算  */
+		//document.getElementById("field").innerHTML=
+		//eval(document.getElementById("field").innerHTML);
+		                                                                //eval()函数可以直接执行js代码
+			//}
+			function reset_value(){ 
+			 //定义清除方法：由于之前输入在div框中的都是字符串，所以第二次输入需要清空上一次执行的运算结果
+				var a = "";       //定义一个元素值为空
+				document.getElementById("TotalMony").innerHTML = a; 
+				document.getElementById("LoanTime").innerHTML = a; 
+				document.getElementById("LoanRateY").innerHTML = a; 
+				document.getElementById("Inflation").innerHTML = a; 
+				document.getElementById("FinanceRate").innerHTML = a; 
+				//将空值传给div框，准备下一次的运算
+			}
+			function equal()
+			{
+				var TotalMony = document.getElementById("TotalMony").value; 
+				var FinanceRate = document.getElementById("FinanceRate").value; 
+				var Inflation = document.getElementById("Inflation").value; 
+				var LoanTime  = document.getElementById("LoanTime").value; 
+				var LoanRateY   = document.getElementById("LoanRateY").value; 
+				
+				var n = LoanTime*12;
+				
+				var LoanRateM =  LoanRateY/12;
+				
+				var BackMoneyM = TotalMony*LoanRateM*((Math.pow((1+LoanRateM), n))/((Math.pow((1+LoanRateM), n)-1)));
+				//var a1 = ((Math.pow((1+LoanRateM), n)));
+				//var BackMoneyM = TotalMony*LoanRateM*((1+LoanRateM)**n)/((1+LoanRateM)**n-1));
+				//document.getElementById("Reslt").innerHTML = BackMoneyM;
+				
+				var Finance = TotalMony*FinanceRate*LoanTime;
+				//var TotalMoneyAndFinance = (TotalMony+Finance)/((Math.pow((1+Inflation),LoanTime)));
+				var aa = 1+Number(Inflation);
+				var TotalMoneyAndFinance = (Number(TotalMony)+Number(Finance))/Math.pow(aa,LoanTime);
+				//document.getElementById("Reslt").innerHTML = aa;
+				//document.getElementById("Reslt").innerHTML = TotalMoneyAndFinance;
+				
+				var BackMoneyAll = 0;
+				for (var i=1;i<Number(n)+1;i++){
+					BackMoneyAll = Number(BackMoneyAll) + Number((BackMoneyM)/(Math.pow((1+Number(Inflation)),(Number(LoanTime)-(i-1)/12))));
+					//BackMoneyAll = BackMoneyAll + (BackMoneyM)/(1+Inflation)**(LoanTime-(i-1)/12);
+				}
+				var Loan = TotalMoneyAndFinance- BackMoneyAll;
+				
+				document.getElementById("Reslt").innerHTML = Loan;
+				
+				if(Number(Loan)<0)
+				{
+					document.getElementById("Suggestion").innerHTML = "全款更划算";
+				}
+				else
+				{
+					document.getElementById("Suggestion").innerHTML = "贷款更划算";
+				}
+			}
+			//var array1 = [1,4,2,5,7,8];
+			//for(var i=0;i<6;i++){
+			//	document.write(array1[i]+" ");
+			//}
+		</script>
+	</body>
+
+</html>
